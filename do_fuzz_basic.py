@@ -5,7 +5,7 @@ buffer = "A" * 100
 while True:
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(("10.10.23.218", 1337))
+        s.connect(("127.0.0.1", 80))
         s.send(("OVERFLOW3 " + buffer + "\r\n").encode())
         print(f"sending {len(buffer)} bytes")
         time.sleep(1)

