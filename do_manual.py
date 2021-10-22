@@ -12,7 +12,11 @@ if prepend_cmd:
 offset_shellcode = 0
 nop_shed_padding = 0
 payload_max_size = 0
-return_address = int("02D8FF88", 16)
+
+return_address = ""
+if return_address:
+    # To Python hex
+    return_address = int(return_address, 16)
 
 send_bad_chars = False
 except_bad_chars = "00,"  # Put a comma to add additional bad chars
