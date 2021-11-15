@@ -24,6 +24,6 @@ if __name__ == "__main__":
     offset_eip = offset + len(cmd)
     offset_esp = offset_eip + 4  # + 4 bytes after EIP
 
-    print(f"Offset of 0x{args.address}: {offset}")
+    print(f"Offset of {args.address}: {offset}")
     print(f"Offset of EIP + cmd len : {offset_eip}")
     print(f"Offset of EIP + cmd len + 4 = ESP: {offset_esp}")
